@@ -116,45 +116,48 @@ function forEach(dataset) {
 	for (var i = 0; i < dataset.features.length; i++) {
 		array.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, 100]); 
 	}
-    console.log(array);
+    //returns Array [ 47.655005, -122.205485, 100 ]
+    console.log(array[1]);
 	return array;
 };
 
 function gettheHeat(dataset){
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2FiY2FwIiwiYSI6InMwc0R2SXcifQ.Q6WRTyJpC7Rtp-4SldkODQ';
-        //var baseMap = L.mapbox.map('fullscreenMap');
-        //    baseMap.setView([47.465,-122.2], 10);
+        //does this create another maplayer?
+        var layerMap = L.mapbox.map('fullscreenMap');
+        //here I set the baseMap view to the same coordinates and zoom as my base layer
+        layerMap.setView([47.465,-122.2], 10);
 
         var heat = L.heatLayer(dataset).addTo(map);
         var draw = true;
 };
 
+/* HEATMAP EXAMPLE SCRIPT
 
-/*
-}
-	// heatmap configuration
-	var config = {
-	    element: document.getElementById(),
-	    radius: 30,
-	    opacity: 50,
-	    legend: {
-	        position: 'br',
-	        title: 'Testing'
-	    }   
-	};
+<!-- Example data. -->
+<script src='/mapbox.js/assets/data/realworld.388.js'></script>
 
-	//creates and initializes the heatmap
-	var heatmap = h337.create(config);
+<script>
+L.mapbox.accessToken = 'pk.eyJ1IjoiZ2FiY2FwIiwiYSI6InMwc0R2SXcifQ.Q6WRTyJpC7Rtp-4SldkODQ';
+    var map = L.mapbox.map('map', 'examples.map-0l53fhk2')
+        .setView([-37.821, 175.219], 16);
 
-	document.getElementById("map").onclick = function(e){
-	    var lat = feature.properties.X;
-	    var lng = feature.properties.Y;
-	    heatmap.store.addDataPoint(lat, lng, len(feature.properties.UBI));
-	};
+    var heat = L.heatLayer(addressPoints, {maxZoom: 18}).addTo(map);
+    var draw = true;
 
-	heatmap.setData(testData); 
+    // add points on mouse move (except when interacting with the map)
+    map.on({
+        movestart: function () { draw = false; },
+        moveend:   function () { draw = true; },
+        mousemove: function (e) {
+            if (draw) {
+                heat.addLatLng(e.latlng);
+            }
+        }
+    })
 
-};
+// END EXAMPLE SCRIPT
+
 
 function getColor(d) {
     return d > 1000 ? '#800026' :
