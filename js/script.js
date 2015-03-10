@@ -10,16 +10,17 @@ var fullscreenMap = L.map('map').setView([47.465,-122.2], 10);
 var CartoDBTiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{
   attribution: 'Map Data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors, Map Tiles &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 });
-
 //add tiles
 fullscreenMap.addLayer(CartoDBTiles);
 
 $.getJSON( "geojson/biz.geojson", function( data ) {
 	var dataset = data;
+    
     //density overall
 	var result = forEach(dataset);
 	gettheHeat(result);
     createBiz(dataset);
+    
     //density by category
     //specificforEach(dataset);
 });
@@ -38,12 +39,7 @@ var bizPointToLayer = function (feature, latlng){
 		stroke: false,
 		fillOpacity: 1
 	});
-	
 	return bizMarker;	
-}
-
-var bizClick = function (feature, layer) {
-	layer.bindPopup("<strong>Company Name: </strong>" + feature.properties.Comp_Name);
 }
 
 //could move to pointtolayer
@@ -110,6 +106,10 @@ var bizStyle = function (feature){
 }
 
 
+var bizClick = function (feature, layer) {
+    layer.bindPopup("<strong>Company Name: </strong>" + feature.properties.Comp_Name);
+}
+
 //basic for each point: latitude, longitude, count (set all equal to 1)
 //except both the dataset coming in and a category to filter on, could filter with jquery, d3... (js .filter)
 //write a function that creates an array that filters out non-desirable fields
@@ -127,6 +127,47 @@ function gettheHeat(dataset){
     L.heatLayer(dataset, {radius: 10}, {maxZoom: 10}).addTo(fullscreenMap);
 };
 
+/*
+
+var legend = L.control({position: 'bottomleft'});
+    legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend');
+    labels = ['<strong>Categories</strong>'],
+    categories = [Aircraft leasing, Education, Engineering firms, Industrial products, Logistics support, Machine Shops, Maintenance repair and overhaul,
+    Materials distribution, Materials processing, Other, Parts and equipment distribution, Parts and equipment manufacturers, Software and IT, Space,Test and Calibration];
+
+    for (var i = 0; i < dataset.features.length; i++) {
+
+            div.innerHTML += 
+            labels.push(
+                '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
+            (categories[i] ? categories[i] : '+'));
+
+        }
+        div.innerHTML = labels.join('<br>');
+    return div;
+    };
+    legend.addTo(map);
+
+function getColor(d) {
+    d = Aircraft leasing ? '#a6cee3' :
+    d = Education ? '#1f78b4' :
+    d = Engineering firms ? '#b2df8a' :
+    d = Industrial products ? '#33a02c' :
+    d = Logistics support ? '#fb9a99' :
+    d = Machine Shops ? '#e31a1c' :
+    d = Maintenance, repair and overhaul ? '#fdbf6f' :
+    d = Materials distribution ? '#ff7f00' :
+    d = Materials processing ? '#cab2d6' :
+    d = Other ? '#6a3d9a' :
+    d = Parts and equipment distribution ? '#ffff99' :
+    d = Parts and equipment manufacturers ? '#b15928' :
+    d = Software and IT ? '#d9d9d9' :
+    d = Space ? '#ffed6f' :
+    d = Test and Calibration ? '#fccde5' ;
+}
+
 var baseMaps = {
     "baseMap": CartoDBTiles,
 };
@@ -137,8 +178,9 @@ var overlayMaps = {
 
 L.control.layers(baseMaps, overlayMaps, {position:'topright'}).addTo(map);
 
+----
 
-/*function specificforEach(dataset) {
+function specificforEach(dataset) {
     var categoryArray = []
     for (var i = 0; i < dataset.features.length; i++) {
         categoryArray.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, dataset.features[i].properties.Category]); 
@@ -147,14 +189,5 @@ L.control.layers(baseMaps, overlayMaps, {position:'topright'}).addTo(map);
     console.log(categoryArray[1]);
     return categoryArray;
 };
+*/
 
-function getColor(d) {
-    return d > 1000 ? '#800026' :
-           d > 500  ? '#BD0026' :
-           d > 200  ? '#E31A1C' :
-           d > 100  ? '#FC4E2A' :
-           d > 50   ? '#FD8D3C' :
-           d > 20   ? '#FEB24C' :
-           d > 10   ? '#FED976' :
-                      '#FFEDA0';
-}
