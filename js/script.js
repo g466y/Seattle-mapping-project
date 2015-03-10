@@ -114,23 +114,20 @@ var bizStyle = function (feature){
 function forEach(dataset) {
 	var array = []
 	for (var i = 0; i < dataset.features.length; i++) {
-		array.push({"X": dataset.features[i].properties.X, "Y": dataset.features[i].properties.Y, "value":100}); 
+		array.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, 100]); 
 	}
+    console.log(array);
 	return array;
 };
 
 function gettheHeat(dataset){
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZ2FiY2FwIiwiYSI6InMwc0R2SXcifQ.Q6WRTyJpC7Rtp-4SldkODQ';
+        //var baseMap = L.mapbox.map('fullscreenMap');
+        //    baseMap.setView([47.465,-122.2], 10);
 
-	var heat = simpleheat("heatmapArea");
-
-	heat.data(dataset);
-
-	heat.addTo(fullscreenMap);
-
-
-}
-
-
+        var heat = L.heatLayer(dataset).addTo(map);
+        var draw = true;
+};
 
 
 /*

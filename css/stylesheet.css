@@ -12,9 +12,11 @@ div#map {
     display: inline-block;
 }
 
-div#heatmapArea{
-    width: 100%;
-    display: inline-block;
+#heatMap {
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:100%;
 }
 
 .legend {
