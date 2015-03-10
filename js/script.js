@@ -107,7 +107,7 @@ var bizStyle = function (feature){
 
 
 var bizClick = function (feature, layer) {
-    layer.bindPopup("<strong>Company Name: </strong>" + feature.properties.Comp_Name);
+    layer.bindPopup("<strong>Company Name: </strong>" + feature.properties.Comp_Name + "<strong> </br>Category: </strong>" + feature.properties.Category);
 }
 
 //basic for each point: latitude, longitude, count (set all equal to 1)
