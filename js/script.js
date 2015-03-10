@@ -16,9 +16,12 @@ fullscreenMap.addLayer(CartoDBTiles);
 
 $.getJSON( "geojson/biz.geojson", function( data ) {
 	var dataset = data;
-	createBiz(dataset);
+    //density overall
 	var result = forEach(dataset);
 	gettheHeat(result);
+    createBiz(dataset);
+    //density by category
+    //specificforEach(dataset);
 });
 
 function createBiz (dataset) {
@@ -116,48 +119,34 @@ function forEach(dataset) {
 	for (var i = 0; i < dataset.features.length; i++) {
 		array.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, 100]); 
 	}
-    //returns Array [ 47.655005, -122.205485, 100 ]
-    console.log(array[1]);
+    //returns Array [ lat, lng, 100 ]
 	return array;
 };
 
 function gettheHeat(dataset){
-    L.mapbox.accessToken = 'pk.eyJ1IjoiZ2FiY2FwIiwiYSI6InMwc0R2SXcifQ.Q6WRTyJpC7Rtp-4SldkODQ';
-        //does this create another maplayer?
-        var layerMap = L.mapbox.map('fullscreenMap');
-        //here I set the baseMap view to the same coordinates and zoom as my base layer
-        layerMap.setView([47.465,-122.2], 10);
-
-        var heat = L.heatLayer(dataset).addTo(map);
-        var draw = true;
+    L.heatLayer(dataset, {radius: 10}, {maxZoom: 10}).addTo(fullscreenMap);
 };
 
-/* HEATMAP EXAMPLE SCRIPT
+var baseMaps = {
+    "baseMap": CartoDBTiles,
+};
 
-<!-- Example data. -->
-<script src='/mapbox.js/assets/data/realworld.388.js'></script>
+var overlayMaps = {
+    "heat map": gettheHeat,
+};
 
-<script>
-L.mapbox.accessToken = 'pk.eyJ1IjoiZ2FiY2FwIiwiYSI6InMwc0R2SXcifQ.Q6WRTyJpC7Rtp-4SldkODQ';
-    var map = L.mapbox.map('map', 'examples.map-0l53fhk2')
-        .setView([-37.821, 175.219], 16);
+L.control.layers(baseMaps, overlayMaps, {position:'topright'}).addTo(map);
 
-    var heat = L.heatLayer(addressPoints, {maxZoom: 18}).addTo(map);
-    var draw = true;
 
-    // add points on mouse move (except when interacting with the map)
-    map.on({
-        movestart: function () { draw = false; },
-        moveend:   function () { draw = true; },
-        mousemove: function (e) {
-            if (draw) {
-                heat.addLatLng(e.latlng);
-            }
-        }
-    })
-
-// END EXAMPLE SCRIPT
-
+/*function specificforEach(dataset) {
+    var categoryArray = []
+    for (var i = 0; i < dataset.features.length; i++) {
+        categoryArray.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, dataset.features[i].properties.Category]); 
+    }
+    //returns Array [ lat, lng, "Category" ]
+    console.log(categoryArray[1]);
+    return categoryArray;
+};
 
 function getColor(d) {
     return d > 1000 ? '#800026' :
@@ -169,24 +158,3 @@ function getColor(d) {
            d > 10   ? '#FED976' :
                       '#FFEDA0';
 }
-
-var legend = L.control({position: 'bottomRight'});
-
-legend.onAdd = function (map) {
-
-    var div = L.DomUtil.create('div', 'info legend'),
-        type = [0, 10, 20, 50, 100, 200, 500, 1000],
-        labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < type.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(type[i] + 1) + '"></i> ' +
-            type[i] + (type[i + 1] ? '&ndash;' + type[i + 1] + '<br>' : '+');
-    }
-
-    return div;
-};
-
-legend.addTo(map);
-*/
