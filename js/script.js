@@ -3,7 +3,7 @@ var fullscreenMap = L.map('map').setView([47.58,-122.2], 10);
 
 //get tiles
 var CartoDBTiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',{
-  attribution: 'Map Data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> Contributors, Map Tiles &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
+  attribution: 'Map Data &copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> Contributors, Map Tiles &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 });
 
 //add tiles
@@ -78,7 +78,7 @@ function gettheHeat(dataset){
 function getColor(d) {
     return d == "Aircraft leasing" ? '#CC3399' :
            d == "Education" ? '#FFCC00' :
-           d == "Engineering firms" ? '#00CC99' :
+           d == "Engineering firms" ? '#194719' :
            d == "Industrial products" ? '#0099FF' :
            d == "Logistics support" ? '#FF3333' :
            d == "Machine shops" ? '#FF99FF' :
@@ -94,12 +94,13 @@ function getColor(d) {
            '#edf8e9';
 }
 
+
 //add legend to map
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'legend');
-        labels = ['<strong>Aerospace Industry by Company Type:</strong>'],
+        labels = ["<strong>Aerospace Businesses in Seattle:</strong>"],
         categories = ["Aircraft leasing", "Education", "Engineering firms", "Industrial products", "Logistics support", "Machine shops", "Maintenance, repair and overhaul", "Materials distribution", "Materials processing", "Other", "Parts and equipment distribution", "Parts and equipment manufacturers", "Software and IT", "Space", "Test and calibration"];
 
         for (var i = 0; i < categories.length; i++) {
@@ -112,11 +113,11 @@ legend.onAdd = function (map) {
             div.innerHTML +=
                 '<p></p>' +
                 '<b>Credits:</b>' +
-                '<br><span>Data provided by <a href=\"http://www.locus.org\">Locus Analytics</a><br />' + 
-                'Thanks to <a href=\"http://nijel.org/\">JD Godchaux</a></span><br />';
-};
-    return div;
+                '<br><span>Data provided by <a href=\"http://www.locus.org\" target="_blank">Locus Analytics</a><br />' + 
+                'Thanks to <a href=\"http://nijel.org/\" target="_blank">JD Godchaux</a></span><br />';
     };
+    return div;
+};
 
 legend.addTo(fullscreenMap);
 
@@ -128,69 +129,10 @@ function getControl () {
     };
 
     var overlayMaps = {
-        "Overall Density": heatMap,        
+        "Density of Companies": heatMap,        
         "Companies": pointLayer,
     };
 
     L.control.layers(baseMaps, overlayMaps).addTo(fullscreenMap);
 
 }
-
-
-/*
-
-//start with showing the points for one type
-//have a layer defined for each type
-//copy pointLayer for each of these
-//filter dataset to show a given type of category
-//filter through dataset and create an if statement to style it, if not selected set radius to 0
-//for heat map you will have to filter the dataset to pass the dataset in its entirety to heatmap
-//have pre-churned out arrays, and then when someone clicks get heatmap it would get generated
-//    based on what people selected
-//start with 2 layers and see what i can do
-//before heatmap is created would have to clear what's there
-
-
-//
-function forEach2(dataset) {
-    var categoryArray = []
-    for (var i = 0; i < dataset.features.length; i++) {
-        categoryArray.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, dataset.features[i].properties.Category]); 
-    }
-    //returns Array [ lat, lng, "Category" ]
-    console.log(categoryArray[1]);
-    return categoryArray;
-};
-
-//HEAT MAP BY COMPANY TYPE
-
-function forEach2(dataset) {
-    var categoryArray = []
-    for (var i = 0; i < dataset.features.length; i++) {
-        categoryArray.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, dataset.features[i].properties.Category]); 
-    }
-    //returns Array [ lat, lng, "Category" ]
-    console.log(categoryArray[1]);
-    return categoryArray;
-};
-
-//FUNCTION FOR USER TO SELECT WHICH CATEGORIES THEY WANT TO INCLUDE IN HEAT MAP
-
-function gettheHeat2(dataset){
-    var heatMap = L.heatLayer(dataset, {radius: 10}, {maxZoom: 10}).addTo(fullscreenMap);
-    heatLayer.addLayer(heatMap);
-};
-
-----
-
-function specificforEach(dataset) {
-    var categoryArray = []
-    for (var i = 0; i < dataset.features.length; i++) {
-        categoryArray.push([dataset.features[i].properties.Y, dataset.features[i].properties.X, dataset.features[i].properties.Category]); 
-    }
-    //returns Array [ lat, lng, "Category" ]
-    console.log(categoryArray[1]);
-    return categoryArray;
-};
-*/
-
